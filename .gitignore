@@ -73,10 +73,10 @@ tmp/
 *.temp
 test.R
 
-# Data files (optional - uncomment if you don't want to track data)
-# datatrain/
-# *.xlsx
-# *.csv
+# Data files - exclude training data directory
+datatrain/
+*.xlsx
+*.csv
 
 # Model files
 *.model

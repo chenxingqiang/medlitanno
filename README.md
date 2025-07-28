@@ -77,9 +77,21 @@ pip install pandas openpyxl openai requests
 ```
 
 ### API配置
-系统已预配置API密钥，支持以下模型：
-- DeepSeek API
-- Qianwen API
+需要配置环境变量来设置API密钥：
+
+```bash
+# 设置环境变量
+export DEEPSEEK_API_KEY=your_deepseek_api_key_here
+export QIANWEN_API_KEY=your_qianwen_api_key_here
+
+# 或者使用配置文件
+cp env.example .env
+# 编辑 .env 文件，填入您的API密钥
+```
+
+支持的模型：
+- DeepSeek API (需要 DEEPSEEK_API_KEY)
+- Qianwen API (需要 QIANWEN_API_KEY)
 
 ## 🎮 使用方法
 

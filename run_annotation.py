@@ -11,13 +11,26 @@ from auto_annotation_system import MedicalAnnotationLLM, batch_process_directory
 def main():
     """主函数"""
     
-    # 配置参数 - 已配置您提供的API密钥
+    # 配置参数 - 从环境变量获取API密钥
     CONFIG = {
-        "DEEPSEEK_API_KEY": "sk-d02fca54e07f4bdfb1778aeb62ae7671",
-        "QIANWEN_API_KEY": "sk-296434b603504719b9f5aca8286f5166", 
+        "DEEPSEEK_API_KEY": os.getenv("DEEPSEEK_API_KEY"),
+        "QIANWEN_API_KEY": os.getenv("QIANWEN_API_KEY"), 
         "DATA_DIR": "datatrain",                # 数据目录
         "OUTPUT_DIR": "annotated_results",      # 输出目录
     }
+    
+    # 检查API密钥
+    if not CONFIG["DEEPSEEK_API_KEY"]:
+        print("❌ 请设置环境变量 DEEPSEEK_API_KEY")
+        print("Please set environment variable DEEPSEEK_API_KEY")
+        print("例如: export DEEPSEEK_API_KEY=your_api_key")
+        return
+    
+    if not CONFIG["QIANWEN_API_KEY"]:
+        print("❌ 请设置环境变量 QIANWEN_API_KEY")
+        print("Please set environment variable QIANWEN_API_KEY")
+        print("例如: export QIANWEN_API_KEY=your_api_key")
+        return
     
     print("=== 医学文献自动标注系统 ===")
     print("Medical Literature Auto-Annotation System")
@@ -114,9 +127,15 @@ def main():
 def test_single_file():
     """测试单个文件的标注功能"""
     
-    # 配置
-    DEEPSEEK_API_KEY = "sk-d02fca54e07f4bdfb1778aeb62ae7671"
-    QIANWEN_API_KEY = "sk-296434b603504719b9f5aca8286f5166"
+    # 配置 - 从环境变量获取API密钥
+    DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+    QIANWEN_API_KEY = os.getenv("QIANWEN_API_KEY")
+    
+    # 检查API密钥
+    if not DEEPSEEK_API_KEY or not QIANWEN_API_KEY:
+        print("❌ 请设置环境变量 DEEPSEEK_API_KEY 和 QIANWEN_API_KEY")
+        print("Please set environment variables DEEPSEEK_API_KEY and QIANWEN_API_KEY")
+        return
     TEST_FILE = "datatrain/bacteria-ids-4937/A/Acute motor axonal neuropathy.xlsx"
     
     if not os.path.exists(TEST_FILE):

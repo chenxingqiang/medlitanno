@@ -246,12 +246,22 @@ def restart_processing(model="deepseek-reasoner", data_dir="datatrain"):
     print("💡 支持断点续传，已处理的文件将被跳过")
     print()
     
-    # 配置API密钥
+    # 配置API密钥 - 从环境变量获取
     api_keys = {
-        "deepseek": "sk-d02fca54e07f4bdfb1778aeb62ae7671",
-        "deepseek-reasoner": "sk-d02fca54e07f4bdfb1778aeb62ae7671",
-        "qianwen": "sk-296434b603504719b9f5aca8286f5166"
+        "deepseek": os.getenv("DEEPSEEK_API_KEY"),
+        "deepseek-reasoner": os.getenv("DEEPSEEK_API_KEY"),
+        "qianwen": os.getenv("QIANWEN_API_KEY")
     }
+    
+    # 检查API密钥
+    if not api_keys[model]:
+        if model in ["deepseek", "deepseek-reasoner"]:
+            print("❌ 请设置环境变量 DEEPSEEK_API_KEY")
+            print("例如: export DEEPSEEK_API_KEY=your_api_key")
+        else:
+            print("❌ 请设置环境变量 QIANWEN_API_KEY")
+            print("例如: export QIANWEN_API_KEY=your_api_key")
+        return
     
     model_names = {
         "deepseek": "deepseek-chat",

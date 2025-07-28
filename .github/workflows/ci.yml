@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9, "3.10", "3.11"]
+        python-version: [3.9, "3.10", "3.11"]
 
     steps:
     - uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -e .
         pip install pytest pytest-cov
     
     - name: Lint with flake8
@@ -37,15 +37,22 @@ jobs:
     
     - name: Test imports
       run: |
-        python -c "import auto_annotation_system; print('✅ Core module imports successfully')"
-        python -c "import batch_monitor; print('✅ Monitor module imports successfully')"
+        python -c "import medlitanno; print('✅ Core package imports successfully')"
+        python -c "import medlitanno.annotation; print('✅ Annotation module imports successfully')"
+        python -c "import medlitanno.common; print('✅ Common module imports successfully')"
     
     - name: Test basic functionality
       run: |
         python -c "
-        from auto_annotation_system import MedicalAnnotationLLM
+        from medlitanno.annotation import MedicalAnnotationLLM
         print('✅ MedicalAnnotationLLM class can be imported')
+        from medlitanno.common import LLMClient
+        print('✅ LLMClient class can be imported')
         "
+    
+    - name: Run unit tests
+      run: |
+        pytest tests/ -v
 
   security:
     runs-on: ubuntu-latest
@@ -58,7 +65,7 @@ jobs:
         # Check for known security vulnerabilities
         safety check --json || true
         # Check for common security issues in Python code
-        bandit -r . -f json || true
+        bandit -r src/ -f json || true
 
   documentation:
     runs-on: ubuntu-latest
@@ -80,5 +87,13 @@ jobs:
           echo "✅ LICENSE file exists"
         else
           echo "❌ LICENSE file is missing"
+          exit 1
+        fi
+        
+        # Check if docs directory exists
+        if [ -d docs ]; then
+          echo "✅ docs directory exists"
+        else
+          echo "❌ docs directory is missing"
           exit 1
         fi 

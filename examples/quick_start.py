@@ -74,7 +74,7 @@ def main():
         print("📊 标注结果:")
         print(f"实体数量: {len(result.entities)}")
         print(f"关系数量: {len(result.relations)}")
-        print(f"证据数量: {len(result.evidence)}")
+        print(f"证据数量: {len(result.evidences)}")
         print()
         
         print("🦠 识别的实体:")
@@ -88,7 +88,7 @@ def main():
         print()
         
         print("📝 支持证据:")
-        for evidence in result.evidence:
+        for evidence in result.evidences:
             print(f"  - {evidence.text[:100]}...")
         print()
         

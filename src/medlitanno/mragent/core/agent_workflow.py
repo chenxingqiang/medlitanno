@@ -318,7 +318,8 @@ class MRAgent:
     @cached_property
     def opengwas_df(self):
         # 读取opengwas csv文件
-        opengwas_path = 'opengwas.csv'
+        import os
+        opengwas_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'opengwas.csv')
         df = pd.read_csv(opengwas_path)
         df['trait'] = df['trait'].astype(str)
         return df

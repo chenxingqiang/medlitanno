@@ -57,10 +57,12 @@ config.json
 secrets.json
 
 # Output files
+output/
 annotated_results*/
 failed_files_*.json
 test_*_result*.json
 demo_output_*.json
+examples/*_result*.json
 *.pdf
 *.png
 *.jpg

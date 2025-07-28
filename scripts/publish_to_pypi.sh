@@ -12,13 +12,13 @@ NC='\033[0m' # No Color
 echo -e "${YELLOW}Preparing to publish medlitanno to PyPI...${NC}"
 
 # Check if twine is installed
-if ! command -v twine &> /dev/null; then
+if ! python -c "import twine" &> /dev/null; then
     echo -e "${RED}Error: twine is not installed. Please install it using 'pip install twine'.${NC}"
     exit 1
 fi
 
 # Check if build is installed
-if ! command -v build &> /dev/null; then
+if ! python -c "import build" &> /dev/null; then
     echo -e "${RED}Error: build is not installed. Please install it using 'pip install build'.${NC}"
     exit 1
 fi
@@ -33,7 +33,7 @@ python -m build
 
 # Check the built package
 echo -e "${YELLOW}Checking the built package...${NC}"
-twine check dist/*
+python -m twine check dist/*
 
 # Ask for confirmation
 read -p "Do you want to upload to PyPI? (y/n) " -n 1 -r
@@ -45,6 +45,6 @@ fi
 
 # Upload to PyPI
 echo -e "${YELLOW}Uploading to PyPI...${NC}"
-twine upload dist/*
+python -m twine upload dist/*
 
 echo -e "${GREEN}Package successfully published to PyPI!${NC}" 

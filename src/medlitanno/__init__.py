@@ -8,13 +8,13 @@ Mendelian Randomization (MR).
 
 Main Components:
 - annotation: LLM-powered medical literature annotation
-- mragent: Mendelian Randomization analysis agent
+- mragent: Mendelian Randomization analysis agent (based on https://github.com/xuwei1997/MRAgent)
 - common: Shared utilities and base classes
 """
 
 __version__ = "1.0.0"
 __author__ = "Chen Xingqiang"
-__email__ = "chenxingqiang@example.com"
+__email__ = "chenxingqiang@gmail.com"
 
 # Import main classes for easy access
 try:

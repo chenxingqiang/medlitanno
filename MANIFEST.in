@@ -1,0 +1,18 @@
+include LICENSE
+include README.md
+include requirements.txt
+include pyproject.toml
+include setup.py
+
+recursive-include src/medlitanno/data *
+recursive-include src/medlitanno/templates *
+recursive-include src/medlitanno/config *
+recursive-include docs *.md *.rst *.txt
+recursive-include examples *.py
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[cod]
+recursive-exclude * *~
+recursive-exclude * .git
+recursive-exclude * .DS_Store
+recursive-exclude datatrain * 

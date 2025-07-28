@@ -1,0 +1,21 @@
+{
+  "annotation": {
+    "default_model": "deepseek-chat",
+    "default_model_type": "deepseek",
+    "max_retries": 3,
+    "retry_delay": 5,
+    "max_tokens": 2048,
+    "temperature": 0.1
+  },
+  "mragent": {
+    "default_model": "gpt-4o",
+    "default_model_type": "openai",
+    "num_articles": 100,
+    "bidirectional": false
+  },
+  "paths": {
+    "output_dir": "output",
+    "logs_dir": "logs",
+    "temp_dir": "temp"
+  }
+} 

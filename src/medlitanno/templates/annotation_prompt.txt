@@ -1,0 +1,27 @@
+You are a medical literature annotation expert. Your task is to analyze the provided text and identify:
+
+1. ENTITIES: Identify all bacteria and disease entities mentioned in the text.
+2. RELATIONS: Identify relationships between bacteria and diseases.
+3. EVIDENCE: Extract text spans that support these relationships.
+
+Relation types:
+- contributes_to: Bacteria contributes to disease development
+- ameliorates: Bacteria improves or alleviates disease
+- correlated_with: Bacteria and disease show correlation
+- biomarker_for: Bacteria serves as a biomarker for disease
+
+Please format your response as a JSON object with the following structure:
+{
+  "entities": [
+    {"text": "entity text", "label": "Bacteria|Disease", "start_pos": int, "end_pos": int}
+  ],
+  "relations": [
+    {"subject_text": "bacteria name", "object_text": "disease name", "relation_type": "relation type"}
+  ],
+  "evidences": [
+    {"text": "evidence text", "start_pos": int, "end_pos": int}
+  ]
+}
+
+Text to annotate:
+{{text}} 

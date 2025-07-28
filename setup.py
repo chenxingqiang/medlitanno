@@ -20,7 +20,7 @@ setup(
     name="medlitanno",
     version="1.0.0",
     author="Chen Xingqiang",
-    author_email="chenxingqiang@example.com",
+    author_email="chenxingqiang@gmail.com",
     description="Medical Literature Analysis and Annotation System with LLM-powered automation",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
@@ -56,6 +56,10 @@ setup(
             "streamlit>=1.28.0",
             "plotly>=5.17.0",
         ],
+        "mragent": [
+            "biopython>=1.81",
+            "rpy2>=3.5.0",
+        ],
         "full": [
             "pytest>=7.0.0",
             "pytest-cov>=4.0.0",
@@ -64,6 +68,8 @@ setup(
             "mypy>=1.0.0",
             "streamlit>=1.28.0",
             "plotly>=5.17.0",
+            "biopython>=1.81",
+            "rpy2>=3.5.0",
         ],
     },
     entry_points={

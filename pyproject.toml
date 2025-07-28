@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "medlitanno"
+version = "1.0.0"
+description = "Medical Literature Analysis and Annotation System with LLM-powered automation"
+readme = "README.md"
+authors = [
+    {name = "Chen Xingqiang", email = "chenxingqiang@gmail.com"},
+]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Healthcare Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Text Processing :: Linguistic",
+]
+keywords = [
+    "medical literature",
+    "annotation",
+    "mendelian randomization",
+    "llm",
+    "biomedical nlp",
+    "causal inference",
+    "gwas",
+    "automation",
+]
+requires-python = ">=3.9"
+
+[project.urls]
+"Homepage" = "https://github.com/chenxingqiang/medlitanno"
+"Bug Tracker" = "https://github.com/chenxingqiang/medlitanno/issues"
+"Documentation" = "https://github.com/chenxingqiang/medlitanno/blob/main/docs/"
+"Source Code" = "https://github.com/chenxingqiang/medlitanno"
+
+[project.scripts]
+medlitanno = "medlitanno.cli:main"
+medlitanno-annotate = "medlitanno.annotation.cli:main"
+medlitanno-mr = "medlitanno.mragent.cli:main" 

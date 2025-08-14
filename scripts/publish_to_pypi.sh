@@ -47,4 +47,4 @@ fi
 echo -e "${YELLOW}Uploading to PyPI...${NC}"
 python -m twine upload dist/*
 
-echo -e "${GREEN}Package successfully published to PyPI!${NC}" 
+echo -e "${GREEN}Package successfully published to PyPI!${NC}"

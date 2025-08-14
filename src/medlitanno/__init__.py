@@ -2,8 +2,8 @@
 """
 MedLitAnno - Medical Literature Analysis and Annotation System
 
-A comprehensive Python package for automated medical literature analysis, 
-annotation, and causal inference using Large Language Models (LLMs) and 
+A comprehensive Python package for automated medical literature analysis,
+annotation, and causal inference using Large Language Models (LLMs) and
 Mendelian Randomization (MR).
 
 Main Components:
@@ -21,7 +21,7 @@ try:
     from .annotation import (
         MedicalAnnotationLLM,
         Entity,
-        Evidence, 
+        Evidence,
         Relation,
         AnnotationResult,
         batch_process_directory
@@ -30,6 +30,19 @@ try:
 except ImportError as e:
     print(f"Warning: Annotation module not available: {e}")
     _ANNOTATION_AVAILABLE = False
+
+try:
+    from .pubmed import (
+        PubMedSearcher,
+        PubMedArticle,
+        SearchResult,
+        PubMedAnnotationPipeline,
+        search_and_annotate
+    )
+    _PUBMED_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: PubMed module not available: {e}")
+    _PUBMED_AVAILABLE = False
 
 try:
     from .mragent import (
@@ -51,9 +64,9 @@ from .common import (
 __all__ = [
     # Common classes (always available)
     "LLMClient",
-    "BaseAnnotator", 
+    "BaseAnnotator",
     "BaseAgent",
-    
+
     # Package info
     "__version__",
     "__author__",
@@ -64,11 +77,21 @@ __all__ = [
 if _ANNOTATION_AVAILABLE:
     __all__.extend([
         "MedicalAnnotationLLM",
-        "Entity", 
+        "Entity",
         "Evidence",
         "Relation",
         "AnnotationResult",
         "batch_process_directory",
+    ])
+
+# Add PubMed classes if available
+if _PUBMED_AVAILABLE:
+    __all__.extend([
+        "PubMedSearcher",
+        "PubMedArticle",
+        "SearchResult",
+        "PubMedAnnotationPipeline",
+        "search_and_annotate",
     ])
 
 # Add MRAgent classes if available
@@ -86,6 +109,11 @@ DEFAULT_CONFIG = {
         "default_model": "deepseek-chat",
         "default_model_type": "deepseek"
     },
+    "pubmed": {
+        "default_max_results": 50,
+        "rate_limit": 1.0,
+        "default_tool": "medlitanno"
+    },
     "mragent": {
         "default_model": "gpt-4o",
         "default_num_articles": 100,
@@ -95,4 +123,4 @@ DEFAULT_CONFIG = {
         "log_level": "INFO",
         "cache_enabled": True
     }
-} 
+}

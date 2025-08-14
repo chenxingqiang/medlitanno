@@ -34,4 +34,4 @@ case $ACTION in
         echo "  $0 restart deepseek # 重启DeepSeek模型"
         exit 1
         ;;
-esac 
+esac

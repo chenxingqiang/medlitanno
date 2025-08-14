@@ -20,9 +20,12 @@ biopython>=1.79
 # Web scraping (for PubMed data)
 beautifulsoup4>=4.11.0
 
+# PubMed API access
+pymed>=0.8.9
+
 # Progress bars and CLI utilities
 tqdm>=4.64.0
 click>=8.0.0
 
 # JSON processing
-jsonschema>=4.0.0 
+jsonschema>=4.0.0

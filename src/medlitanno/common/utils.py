@@ -224,18 +224,27 @@ def validate_api_key(api_key: Optional[str], service: str) -> str:
     return api_key.strip()
 
 
-def get_env_var(var_name: str, default: Optional[str] = None) -> Optional[str]:
+def get_env_var(var_name: str, default: Optional[str] = None, required: bool = False) -> Optional[str]:
     """
     Get environment variable with optional default
     
     Args:
         var_name: Environment variable name
         default: Default value if not found
+        required: Whether the variable is required (raises error if not found)
         
     Returns:
         Optional[str]: Environment variable value or default
+        
+    Raises:
+        ValueError: If required=True and variable is not found
     """
-    return os.getenv(var_name, default)
+    value = os.getenv(var_name, default)
+    
+    if required and value is None:
+        raise ValueError(f"Required environment variable '{var_name}' is not set")
+    
+    return value
 
 
 def merge_dicts(dict1: Dict[str, Any], dict2: Dict[str, Any]) -> Dict[str, Any]:

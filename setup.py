@@ -18,7 +18,7 @@ def read_requirements():
 
 setup(
     name="medlitanno",
-    version="1.1.0",
+    version="1.1.1",
     author="Chen Xingqiang",
     author_email="joy66777@gmail.com",
     description="Medical Literature Analysis and Annotation System with LLM-powered automation",

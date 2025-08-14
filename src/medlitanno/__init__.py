@@ -12,7 +12,7 @@ Main Components:
 - common: Shared utilities and base classes
 """
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 __author__ = "Chen Xingqiang"
 __email__ = "joy66777@gmail.com"
 

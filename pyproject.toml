@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "medlitanno"
-version = "1.1.0"
+version = "1.1.1"
 description = "Medical Literature Analysis and Annotation System with LLM-powered automation"
 readme = "README.md"
 authors = [

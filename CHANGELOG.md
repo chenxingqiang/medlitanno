@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2024-08-14
+
+### Documentation
+- **Enhanced README**: Comprehensive documentation update with detailed PubMed search integration guide
+- **Usage Examples**: Added extensive CLI and Python API examples for new search functionality
+- **Performance Metrics**: Detailed performance and reliability information
+- **Project Structure**: Updated documentation to reflect new modules and capabilities
+- **Contact Information**: Updated maintainer contact details
+
+### Changed
+- Updated PyPI package description with enhanced README content
+- Improved documentation structure and navigation
+
 ## [1.1.0] - 2024-08-14
 
 ### Added

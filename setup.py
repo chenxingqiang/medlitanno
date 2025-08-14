@@ -18,9 +18,9 @@ def read_requirements():
 
 setup(
     name="medlitanno",
-    version="1.0.0",
+    version="1.1.0",
     author="Chen Xingqiang",
-    author_email="chenxingqiang@gmail.com",
+    author_email="joy66777@gmail.com",
     description="Medical Literature Analysis and Annotation System with LLM-powered automation",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
@@ -90,12 +90,14 @@ setup(
     keywords=[
         "medical literature",
         "annotation",
+        "pubmed search",
         "mendelian randomization",
         "llm",
         "biomedical nlp",
         "causal inference",
         "gwas",
         "automation",
+        "literature mining",
     ],
     project_urls={
         "Bug Reports": "https://github.com/chenxingqiang/medlitanno/issues",

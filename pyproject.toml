@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "medlitanno"
-version = "1.0.0"
+version = "1.1.0"
 description = "Medical Literature Analysis and Annotation System with LLM-powered automation"
 readme = "README.md"
 authors = [
@@ -29,12 +29,14 @@ classifiers = [
 keywords = [
     "medical literature",
     "annotation",
+    "pubmed search",
     "mendelian randomization",
     "llm",
     "biomedical nlp",
     "causal inference",
     "gwas",
     "automation",
+    "literature mining",
 ]
 requires-python = ">=3.9"
 

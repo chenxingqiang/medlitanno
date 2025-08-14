@@ -12,9 +12,9 @@ Main Components:
 - common: Shared utilities and base classes
 """
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __author__ = "Chen Xingqiang"
-__email__ = "chenxingqiang@gmail.com"
+__email__ = "joy66777@gmail.com"
 
 # Import main classes for easy access
 try:

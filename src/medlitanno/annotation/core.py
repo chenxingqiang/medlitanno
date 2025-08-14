@@ -14,6 +14,7 @@ from pathlib import Path
 
 from ..common import BaseAnnotator, timer
 from ..common.exceptions import AnnotationError, LLMError
+from .position_matcher import TextPositionMatcher
 
 
 @dataclass
@@ -21,23 +22,35 @@ class Entity:
     """Medical entity (Bacteria or Disease)"""
     text: str
     label: str  # 'Bacteria' or 'Disease'
-    start_pos: int
-    end_pos: int
+    start_pos: int = -1  # -1 indicates position not calculated yet
+    end_pos: int = -1    # -1 indicates position not calculated yet
+    confidence: float = 1.0  # Confidence score for position matching
+    matched_text: str = ""   # Actual text found in document (may differ from text)
     
     def __str__(self) -> str:
         return f"{self.text} ({self.label})"
+    
+    def has_position(self) -> bool:
+        """Check if position information is available"""
+        return self.start_pos >= 0 and self.end_pos >= 0
 
 
 @dataclass
 class Evidence:
     """Evidence supporting a relation"""
     text: str
-    start_pos: int
-    end_pos: int
     relation_type: str  # 'contributes_to', 'ameliorates', 'correlated_with', 'biomarker_for'
+    start_pos: int = -1  # -1 indicates position not calculated yet
+    end_pos: int = -1    # -1 indicates position not calculated yet
+    confidence: float = 1.0  # Confidence score for position matching
+    matched_text: str = ""   # Actual text found in document (may differ from text)
     
     def __str__(self) -> str:
         return f"{self.text[:50]}... ({self.relation_type})"
+    
+    def has_position(self) -> bool:
+        """Check if position information is available"""
+        return self.start_pos >= 0 and self.end_pos >= 0
 
 
 @dataclass
@@ -73,16 +86,22 @@ class AnnotationResult:
                     "text": entity.text,
                     "label": entity.label,
                     "start_pos": entity.start_pos,
-                    "end_pos": entity.end_pos
+                    "end_pos": entity.end_pos,
+                    "confidence": entity.confidence,
+                    "matched_text": entity.matched_text,
+                    "has_position": entity.has_position()
                 }
                 for entity in self.entities
             ],
             "evidences": [
                 {
                     "text": evidence.text,
+                    "relation_type": evidence.relation_type,
                     "start_pos": evidence.start_pos,
                     "end_pos": evidence.end_pos,
-                    "relation_type": evidence.relation_type
+                    "confidence": evidence.confidence,
+                    "matched_text": evidence.matched_text,
+                    "has_position": evidence.has_position()
                 }
                 for evidence in self.evidences
             ],
@@ -154,6 +173,9 @@ class MedicalAnnotationLLM(BaseAnnotator):
         
         # Initialize annotation prompts
         self._setup_prompts()
+        
+        # Initialize position matcher
+        self.position_matcher = TextPositionMatcher(min_confidence=0.7)
     
     def _setup_prompts(self) -> None:
         """Setup annotation prompts based on model type"""
@@ -196,21 +218,17 @@ Abstract: {abstract}
 
 请运用你的推理能力深度分析，确保输出的JSON格式正确。如果没有找到相关实体或关系，请返回空数组。
 
-输出格式：
+输出格式（注意：不需要提供位置信息，系统会自动计算）：
 {{
     "entities": [
         {{
-            "text": "实体文本",
-            "label": "Bacteria/Disease",
-            "start_pos": 起始位置,
-            "end_pos": 结束位置
+            "text": "实体文本（请提供准确的原文文本）",
+            "label": "Bacteria/Disease"
         }}
     ],
     "evidences": [
         {{
-            "text": "证据句子",
-            "start_pos": 起始位置,
-            "end_pos": 结束位置,
+            "text": "证据句子（请提供完整的句子）",
             "relation_type": "contributes_to/ameliorates/correlated_with/biomarker_for"
         }}
     ],
@@ -248,21 +266,17 @@ Abstract: {abstract}
 Title: {title}
 Abstract: {abstract}
 
-**输出格式（严格按照JSON格式）：**
+**输出格式（注意：不需要提供位置信息，系统会自动计算）：**
 {{
     "entities": [
         {{
-            "text": "实体文本",
-            "label": "Bacteria/Disease",
-            "start_pos": 起始位置,
-            "end_pos": 结束位置
+            "text": "实体文本（请提供准确的原文文本）",
+            "label": "Bacteria/Disease"
         }}
     ],
     "evidences": [
         {{
-            "text": "证据句子",
-            "start_pos": 起始位置,
-            "end_pos": 结束位置,
+            "text": "证据句子（请提供完整的句子）",
             "relation_type": "contributes_to/ameliorates/correlated_with/biomarker_for"
         }}
     ],
@@ -276,7 +290,7 @@ Abstract: {abstract}
     ]
 }}
 
-请确保输出的JSON格式正确，位置信息准确。如果没有找到相关实体或关系，请返回空数组。
+请确保输出的JSON格式正确，文本内容准确。如果没有找到相关实体或关系，请返回空数组。
 """
     
     def annotate_text(self, 
@@ -433,25 +447,53 @@ Abstract: {abstract}
         evidences = []
         relations = []
         
-        # Parse entities
+        # Parse entities and match positions
+        entity_texts = []
         for entity_data in data.get('entities', []):
+            entity_text = entity_data['text']
+            entity_texts.append(entity_text)
+            
             entity = Entity(
-                text=entity_data['text'],
-                label=entity_data['label'],
-                start_pos=entity_data.get('start_pos', 0),
-                end_pos=entity_data.get('end_pos', 0)
+                text=entity_text,
+                label=entity_data['label']
             )
             entities.append(entity)
         
-        # Parse evidences
+        # Match positions for entities
+        if entity_texts:
+            entity_matches = self.position_matcher.batch_match_positions(entity_texts, full_text)
+            for entity, match_result in zip(entities, entity_matches):
+                if match_result:
+                    entity.start_pos = match_result.start_pos
+                    entity.end_pos = match_result.end_pos
+                    entity.confidence = match_result.confidence
+                    entity.matched_text = match_result.matched_text
+                else:
+                    self.logger.warning(f"No position found for entity: {entity.text[:50]}...")
+        
+        # Parse evidences and match positions
+        evidence_texts = []
         for evidence_data in data.get('evidences', []):
+            evidence_text = evidence_data['text']
+            evidence_texts.append(evidence_text)
+            
             evidence = Evidence(
-                text=evidence_data['text'],
-                start_pos=evidence_data.get('start_pos', 0),
-                end_pos=evidence_data.get('end_pos', 0),
+                text=evidence_text,
                 relation_type=evidence_data['relation_type']
             )
             evidences.append(evidence)
+        
+        # Match positions for evidences
+        if evidence_texts:
+            evidence_matches = self.position_matcher.batch_match_positions(evidence_texts, full_text)
+            for evidence, match_result in zip(evidences, evidence_matches):
+                if match_result:
+                    evidence.start_pos = match_result.start_pos
+                    evidence.end_pos = match_result.end_pos
+                    evidence.confidence = match_result.confidence
+                    evidence.matched_text = match_result.matched_text
+                else:
+                    self.logger.warning(f"No position found for evidence: {evidence.text[:50]}...")
         
         # Parse relations
         for relation_data in data.get('relations', []):
@@ -499,6 +541,22 @@ Abstract: {abstract}
                 'model_type': self.model_type,
                 'model_name': self.model
             }
+            
+            # Add position matching statistics
+            entity_positions = [e for e in result.entities if e.has_position()]
+            evidence_positions = [e for e in result.evidences if e.has_position()]
+            
+            result_dict['position_stats'] = {
+                'entities_with_position': len(entity_positions),
+                'total_entities': len(result.entities),
+                'entity_position_rate': len(entity_positions) / len(result.entities) if result.entities else 0.0,
+                'evidences_with_position': len(evidence_positions),
+                'total_evidences': len(result.evidences),
+                'evidence_position_rate': len(evidence_positions) / len(result.evidences) if result.evidences else 0.0,
+                'avg_entity_confidence': sum(e.confidence for e in entity_positions) / len(entity_positions) if entity_positions else 0.0,
+                'avg_evidence_confidence': sum(e.confidence for e in evidence_positions) / len(evidence_positions) if evidence_positions else 0.0
+            }
+            
             output_data.append(result_dict)
         
         with open(output_path, 'w', encoding='utf-8') as f:

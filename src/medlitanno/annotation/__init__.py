@@ -29,6 +29,12 @@ from .converter import (
     convert_to_label_studio,
 )
 
+from .position_matcher import (
+    TextPositionMatcher,
+    MatchResult,
+    create_position_matcher,
+)
+
 __all__ = [
     # Core classes
     "Entity",
@@ -48,4 +54,9 @@ __all__ = [
     # Conversion utilities
     "LabelStudioConverter",
     "convert_to_label_studio",
+    
+    # Position matching
+    "TextPositionMatcher",
+    "MatchResult", 
+    "create_position_matcher",
 ] 
